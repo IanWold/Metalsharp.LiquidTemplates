@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metalsharp.LiquidTemplates", "Metalsharp.LiquidTemplates\Metalsharp.LiquidTemplates.csproj", "{5FBC6A64-2BF6-4064-824F-172FF3D0E073}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metalsharp.LiquidTemplates.Tests", "Metalsharp.LiquidTemplates.Tests\Metalsharp.LiquidTemplates.Tests.csproj", "{7222B0E5-F493-4798-B4F3-ABB351359C86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5FBC6A64-2BF6-4064-824F-172FF3D0E073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FBC6A64-2BF6-4064-824F-172FF3D0E073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FBC6A64-2BF6-4064-824F-172FF3D0E073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7222B0E5-F493-4798-B4F3-ABB351359C86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7222B0E5-F493-4798-B4F3-ABB351359C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7222B0E5-F493-4798-B4F3-ABB351359C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7222B0E5-F493-4798-B4F3-ABB351359C86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
