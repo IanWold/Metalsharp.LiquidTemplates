@@ -1,11 +1,10 @@
 using Xunit;
 
-namespace Metalsharp.LiquidTemplates.Tests
+namespace Metalsharp.LiquidTemplates.Tests;
+
+public class AlwaysTrueTest
 {
-	public class AlwaysTrueTest
-	{
-		[Fact]
-		public void AlwaysTrue() =>
-			Assert.True(true);
-	}
+	[Fact]
+	public void AlwaysTrue() =>
+		Assert.True(true);
 }
