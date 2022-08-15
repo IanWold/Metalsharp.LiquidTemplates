@@ -1,4 +1,6 @@
-﻿namespace Metalsharp.LiquidTemplates;
+﻿using Fluid;
+
+namespace Metalsharp.LiquidTemplates;
 
 public static class Extensions
 {
@@ -13,4 +15,30 @@ public static class Extensions
 	/// <returns></returns>
 	public static MetalsharpProject UseLiquidTemplates(this MetalsharpProject project, string templateDirectory, bool loadFromFilesystem = true) =>
 		project.Use(new LiquidTemplates(templateDirectory, loadFromFilesystem));
+
+	/// <summary>
+	/// Computes a `TemplateContext` for the given file.
+	/// </summary>
+	/// 
+	/// <param name="file">'
+	/// The `MetalsharpFile` for which the context will be computed.
+	/// </param>
+	/// 
+	/// <returns>
+	/// A `TemplateContext` for the file.
+	/// </returns>
+	internal static TemplateContext GetTemplateContext(this MetalsharpFile file)
+	{
+		var context = new TemplateContext(
+			file.Metadata,
+			new TemplateOptions()
+			{
+				MemberAccessStrategy = new UnsafeMemberAccessStrategy()
+			}
+		);
+
+		context.SetValue("content", file.Text);
+
+		return context;
+	}
 }
