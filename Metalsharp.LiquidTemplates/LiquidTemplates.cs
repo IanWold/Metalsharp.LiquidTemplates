@@ -9,6 +9,8 @@ public class LiquidTemplates : IMetalsharpPlugin
 	readonly string _templateDirectory;
 	readonly bool _loadFromFilesystem;
 
+	readonly Dictionary<string, IFluidTemplate> _templates = new();
+
 	/// <summary>
 	/// Instantiates `LiquidTemplates`. The template files can be added to Metalsharp manually, or `LiquidTemplates` can add them automatically.
 	/// </summary>
@@ -35,51 +37,38 @@ public class LiquidTemplates : IMetalsharpPlugin
 			project.Log.Debug($"Adding templates in file system at {_templateDirectory} to Inputs at {_defaultVirtualTemplateDirectory}");
 			project.AddInput(_templateDirectory, _defaultVirtualTemplateDirectory);
 		}
-		IFluidTemplate? layout = null;
 
-		if (project.InputFiles.SingleOrDefault(f => f.FilePath == $"{VirtualTemplateDirectory}\\layout.liquid") is MetalsharpFile layoutFile)
+		var parser = new FluidParser();
+
+		foreach (var templateFile in project.InputFiles.Where(f => f.Directory == VirtualTemplateDirectory))
 		{
-			project.Log.Debug("Parsing layout.liquid...");
-
-			var success = new FluidParser().TryParse(layoutFile.Text, out layout);
-
-			if (success)
+			if (parser.TryParse(templateFile.Text, out IFluidTemplate template))
 			{
-				project.Log.Debug("Parsed layout.liquid");
-			}
-			else
-			{
-				project.Log.Error("Did not parse layout.liquid");
+				_templates.Add(templateFile.Name, template);
 			}
 		}
 
 		foreach (var output in project.OutputFiles.Where(f => f.Extension == ".html"))
 		{
-			if (output.Metadata.TryGetValue("template", out object? templateFileObject) && templateFileObject is string templateFilePath)
+			void Render(string templateName)
 			{
-				if (project.InputFiles.SingleOrDefault(f => f.FilePath == templateFilePath) is MetalsharpFile templateFile)
+				if (_templates.TryGetValue(templateName, out var template))
 				{
-					if (new FluidParser().TryParse(templateFile.Text, out IFluidTemplate template))
-					{
-						project.Log.Debug($"Rendering file {output.FilePath} with template {templateFilePath}");
-						output.Text = template.Render(new TemplateContext(new { content = output.Text }));
-					}
-					else
-					{
-						project.Log.Error($"Unable to parse template file {templateFilePath}");
-					}
+					project.Log.Debug($"Rendering file {output.FilePath} with template {templateName}");
+					output.Text = template.Render(output.GetTemplateContext());
 				}
 				else
 				{
-					project.Log.Error($"Unable to find template file {templateFilePath}");
+					project.Log.Error($"Unable to parse template file {templateName}");
 				}
 			}
 
-			if (layout is not null)
+			if (output.Metadata.TryGetValue("template", out object? templateFileObject) && templateFileObject is string templateName)
 			{
-				project.Log.Debug($"Rendering file {output.FilePath} with layout");
-				output.Text = layout.Render(new TemplateContext(new { content = output.Text }));
+				Render(templateName);
 			}
+
+			Render("layout");
 		}
 	}
 }
