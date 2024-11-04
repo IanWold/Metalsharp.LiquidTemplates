@@ -1,4 +1,5 @@
-﻿using Fluid;
+﻿using System.Text;
+using Fluid;
 
 namespace Metalsharp.LiquidTemplates;
 
@@ -34,7 +35,7 @@ public class LiquidTemplates : IMetalsharpPlugin
 	{
 		if (_loadFromFilesystem)
 		{
-			project.Log.Debug($"Adding templates in file system at {_templateDirectory} to Inputs at {_defaultVirtualTemplateDirectory}");
+			project.LogDebug($"Adding templates in file system at {_templateDirectory} to Inputs at {_defaultVirtualTemplateDirectory}");
 			project.AddInput(_templateDirectory, _defaultVirtualTemplateDirectory);
 		}
 
@@ -54,12 +55,12 @@ public class LiquidTemplates : IMetalsharpPlugin
 			{
 				if (_templates.TryGetValue(templateName, out var template))
 				{
-					project.Log.Debug($"Rendering file {output.FilePath} with template {templateName}");
-					output.Text = template.Render(output.GetTemplateContext());
+					project.LogDebug($"Rendering file {output.FilePath} with template {templateName}");
+					output.Contents = Encoding.Default.GetBytes(template.Render(output.GetTemplateContext()));
 				}
 				else
 				{
-					project.Log.Error($"Unable to parse template file {templateName}");
+					project.LogError($"Unable to parse template file {templateName}");
 				}
 			}
 
