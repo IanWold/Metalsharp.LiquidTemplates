@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Metalsharp.LiquidTemplates/Metalsharp.LiquidTemplates.csproj" />
+  </ItemGroup>
+
 </Project>
