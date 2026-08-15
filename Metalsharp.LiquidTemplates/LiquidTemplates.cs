@@ -22,6 +22,10 @@ public class LiquidTemplates(string templateDirectory, bool loadFromFilesystem =
 		? _defaultVirtualTemplateDirectory
 		: templateDirectory;
 
+	/// <summary>
+	/// Loads the liquid template files and renders them against the HTML files in the Metalsharp project's output collection.
+	/// </summary>
+	/// <param name="project">The Metalsharp project.</param>
 	public void Execute(MetalsharpProject project)
 	{
 		if (loadFromFilesystem)

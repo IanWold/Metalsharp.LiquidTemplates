@@ -2,6 +2,9 @@
 
 namespace Metalsharp.LiquidTemplates;
 
+/// <summary>
+/// Extension methods for using `LiquidTemplates` with a `MetalsharpProject`, and for computing a `TemplateContext` from a `MetalsharpFile`.
+/// </summary>
 public static class Extensions
 {
 	/// <summary>
