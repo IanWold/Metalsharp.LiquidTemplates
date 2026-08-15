@@ -3,47 +3,38 @@ using Fluid;
 
 namespace Metalsharp.LiquidTemplates;
 
-public class LiquidTemplates : IMetalsharpPlugin
+/// <summary>
+/// Instantiates `LiquidTemplates`. The template files can be added to Metalsharp manually, or `LiquidTemplates` can add them automatically.
+/// </summary>
+/// <param name="templateDirectory">The directory in which the liquid template files are located. If `loadFromFileSystem` is `true`, then this is the name of the directory on disk. If `loadFromFileSystem` is false, then this is the name of the virtual directory in Metalsharp.</param>
+/// <param name="loadFromFilesystem">Whether `LiquidTemplates` should add the template files to Metalsharp.</param>
+public class LiquidTemplates(string templateDirectory, bool loadFromFilesystem = true) : IMetalsharpPlugin
 {
 	const string _defaultVirtualTemplateDirectory = "liquid-templates";
 
-	readonly string _templateDirectory;
-	readonly bool _loadFromFilesystem;
-
-	readonly Dictionary<string, IFluidTemplate> _templates = new();
-
-	/// <summary>
-	/// Instantiates `LiquidTemplates`. The template files can be added to Metalsharp manually, or `LiquidTemplates` can add them automatically.
-	/// </summary>
-	/// <param name="templateDirectory">The directory in which the liquid template files are located. If `loadFromFileSystem` is `true`, then this is the name of the directory on disk. If `loadFromFileSystem` is false, then this is the name of the virtual directory in Metalsharp.</param>
-	/// <param name="loadFromFilesystem">Whether `LiquidTemplates` should add the template files to Metalsharp.</param>
-	public LiquidTemplates(string templateDirectory, bool loadFromFilesystem = true)
-	{
-		_templateDirectory = templateDirectory;
-		_loadFromFilesystem = loadFromFilesystem;
-	}
+	readonly Dictionary<string, IFluidTemplate> _templates = [];
 
 	/// <summary>
 	/// The name of the virtual directory in Metalsharp containing the liquid template files. This can be manually-specified, or a default directory if `LiquidTemplates` automatically adds the input files to Metalsharp.
 	/// </summary>
 	string VirtualTemplateDirectory =>
-		_loadFromFilesystem
+		loadFromFilesystem
 		? _defaultVirtualTemplateDirectory
-		: _templateDirectory;
+		: templateDirectory;
 
 	public void Execute(MetalsharpProject project)
 	{
-		if (_loadFromFilesystem)
+		if (loadFromFilesystem)
 		{
-			project.LogDebug($"Adding templates in file system at {_templateDirectory} to Inputs at {_defaultVirtualTemplateDirectory}");
-			project.AddInput(_templateDirectory, _defaultVirtualTemplateDirectory);
+			project.LogDebug($"Adding templates in file system at {templateDirectory} to Inputs at {_defaultVirtualTemplateDirectory}");
+			project.AddInput(templateDirectory, _defaultVirtualTemplateDirectory);
 		}
 
 		var parser = new FluidParser();
 
 		foreach (var templateFile in project.InputFiles.Where(f => f.Directory == VirtualTemplateDirectory))
 		{
-			if (parser.TryParse(templateFile.Text, out IFluidTemplate template))
+			if (parser.TryParse(templateFile.Text, out var template))
 			{
 				_templates.Add(templateFile.Name, template);
 			}
@@ -64,7 +55,7 @@ public class LiquidTemplates : IMetalsharpPlugin
 				}
 			}
 
-			if (output.Metadata.TryGetValue("template", out object? templateFileObject) && templateFileObject is string templateName)
+			if (output.Metadata.TryGetValue("template", out var templateFileObject) && templateFileObject is string templateName)
 			{
 				Render(templateName);
 			}

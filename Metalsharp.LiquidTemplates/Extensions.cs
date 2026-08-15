@@ -20,7 +20,7 @@ public static class Extensions
 	/// Computes a `TemplateContext` for the given file.
 	/// </summary>
 	/// 
-	/// <param name="file">'
+	/// <param name="file">
 	/// The `MetalsharpFile` for which the context will be computed.
 	/// </param>
 	/// 
