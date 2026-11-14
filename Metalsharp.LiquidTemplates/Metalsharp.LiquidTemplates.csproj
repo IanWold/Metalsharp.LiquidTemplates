@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="Fluid.Core" Version="2.41.1" />
     <PackageReference Include="Metalsharp" Version="1.0.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
